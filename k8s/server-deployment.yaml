@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: server-deployment
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: server
@@ -14,6 +14,16 @@ spec:
     spec:
       containers:
         - name: server
-          image: server-image:latest  
+          image: cerenaykuzu/server:latest 
           ports:
             - containerPort: 5000     
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_URI
+          envFrom:
+            - configMapRef:
+                name: server-config
+
